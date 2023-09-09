@@ -10,7 +10,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.2 #icon图标
+  flutter_screenutil: ^5.9.0 #屏幕适配
+  fluttertoast: ^8.2.2 #弹框
+  dio: ^5.3.2 #网络请求
+  cookie_jar: ^4.0.8 # cookie缓存
+  dio_cookie_manager: ^3.1.0+1
+  crypto: ^3.0.3 #加密
+  shared_preferences: ^2.2.1
+  cached_network_image: ^3.2.3
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
