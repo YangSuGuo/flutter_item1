@@ -21,19 +21,17 @@ class _homeState extends State<home> {
     );
 
     return Scaffold(
-/*        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
           centerTitle: true,
           elevation: 0,
           // toolbarHeight: 65,
           title: const Text(
             'NEWS',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 25,
-                color: Color.fromRGBO(0, 0, 0, 1),
-                letterSpacing: 10),
-          ),*/
+            style:
+                TextStyle(fontSize: 25, color: Colors.black, letterSpacing: 8),
+          ),
 /*          leading: IconButton(
             icon: Icon(Icons.dashboard_customize_sharp,color: Colors.black),
             onPressed: (){},
@@ -43,42 +41,24 @@ class _homeState extends State<home> {
                 onPressed: () {},
               ),
             ]*/
-        // ),
+        ),
         //顶部导航栏
 
         body: CustomScrollView(slivers: [
           const SliverAppBar(
-              // todo 浮动分类选择器【样式未知】
-              // todo 滑动选择【手势适配】
-              // floating: true,
-              stretch: true,
-              expandedHeight: 175,
-              // todo 功能分类栏
-              flexibleSpace: FlexibleSpaceBar(
-                title: const Text(
-                  'NEWS',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      letterSpacing: 10),
-                ),
-                stretchModes: [
-                  StretchMode.fadeTitle,
-                  StretchMode.zoomBackground,
-                  StretchMode.blurBackground
-                ],
-                background: Image(
-                    image: NetworkImage(
-                        'https://tu.ltyuanfang.cn/api/fengjing.php')),
-              )
-              /* Image(
+            // todo 浮动分类选择器【样式未知】
+            // todo 滑动选择【手势适配】
+            floating: true,
+            stretch: true,
+            expandedHeight: 75,
+            // todo 功能分类栏
+            flexibleSpace: Image(
               image: NetworkImage(
                 'https://tu.ltyuanfang.cn/api/fengjing.php',
               ),
               fit: BoxFit.cover,
-            ),*/
-              ),
+            ),
+          ),
           // todo 1.列表化卡片
           // todo 2.dio网络请求渲染，加载占位图
           // todo 3.索引列表点击，获取文章id，请求文章详情
