@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -9,7 +10,8 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  var _currentIndex = 0;
+  int _currentIndex = 0;
+  final _inactiveColor = Colors.grey;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class _homeState extends State<home> {
             // todo 浮动分类选择器【样式未知】
             // todo 滑动选择【手势适配】
             floating: true,
+            // todo 功能分类栏
             flexibleSpace: Image(
               image: NetworkImage(
                 'https://tu.ltyuanfang.cn/api/fengjing.php',
@@ -68,7 +71,7 @@ class _homeState extends State<home> {
                   padding: EdgeInsets.all(10.0),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    // todo 请求的网络数据，格式化？并传入
+                    // todo 请求的网络数据，格式化？并传入_getItem
                     child: _getItem(index),
                   ),
                 );
@@ -79,13 +82,16 @@ class _homeState extends State<home> {
         ]),
         //主体
 
-        // todo 优化底部导航栏
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
+          selectedFontSize: 11.4,
+          unselectedFontSize: 0.0,
+          iconSize: 25,
+          enableFeedback: true,
+          showUnselectedLabels: false,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.add_box_outlined), label: '添加'),
+            BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: '热榜'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
           ],
           //点击事件
@@ -178,10 +184,92 @@ class _homeState extends State<home> {
     );
   }
 
+// 字体样式
   TextStyle getStyle(Color color, double fontSize, {bool bold = false}) {
     return TextStyle(
         color: color,
         fontSize: fontSize,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal);
+  }
+// 自定义底部导航栏
+  Widget _buildBottomBar() {
+    return CustomAnimatedBottomBar(
+      containerHeight: 70,
+      backgroundColor: Colors.black,
+      selectedIndex: _currentIndex,
+      showElevation: true,
+      itemCornerRadius: 24,
+      curve: Curves.easeIn,
+      onItemSelected: (index) => setState(() => _currentIndex = index),
+      items: <BottomNavyBarItem>[
+        BottomNavyBarItem(
+          icon: Icon(Icons.apps),
+          title: Text('Home'),
+          activeColor: Colors.green,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.people),
+          title: Text('Users'),
+          activeColor: Colors.purpleAccent,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.message),
+          title: Text(
+            'Messages ',
+          ),
+          activeColor: Colors.pink,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.settings),
+          title: Text('Settings'),
+          activeColor: Colors.blue,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget getBody() {
+    List<Widget> pages = [
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Home",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Users",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Messages",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Settings",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ];
+    return IndexedStack(
+      index: _currentIndex,
+      children: pages,
+    );
   }
 }

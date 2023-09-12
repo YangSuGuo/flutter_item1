@@ -6,10 +6,12 @@ import 'package:flutter/services.dart';
 void main() {
   runApp(const MyApp());
   // 状态栏沉浸
+  // todo bug 在夜间模式时，状态栏颜色强制更改
   if (Platform.isAndroid) {
     SystemUiOverlayStyle style = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light);
+      // statusBarIconBrightness: Brightness.light
+    );
     SystemChrome.setSystemUIOverlayStyle(style);
   }
 }
