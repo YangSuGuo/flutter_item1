@@ -23,7 +23,6 @@ class _homeState extends State<home> {
           backgroundColor: Color.fromRGBO(255, 255, 255, 1),
           centerTitle: true,
           elevation: 0,
-          toolbarOpacity: 0.5,
           // toolbarHeight: 65,
           title: const Text(
             'NEWS',
@@ -56,37 +55,31 @@ class _homeState extends State<home> {
               ),
               fit: BoxFit.cover,
             ),
-            expandedHeight: 50,
+            expandedHeight: 75,
           ),
           // todo 1.列表化卡片
           // todo 2.dio网络请求渲染
-          // todo 3.索引列表点击，获取文章详情
+          // todo 3.索引列表点击，获取文章id，请求文章详情
+          // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => Card(
-                // 卡片
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: ListTile(
-                  // 列表图片
-                  // visualDensity: VisualDensity(vertical: 4),
-                  leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Image.network(
-                          'https://tu.ltyuanfang.cn/api/fengjing.php',
-                          fit: BoxFit.cover,width: 100,)),
-                  title: Text('Item'),
-                  subtitle: Text('这是一个副标题'),
-                  trailing: Text('浏览量'),
-                  dense: false,
-                ),
-              ),
+              (context, index) {
+                return Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    // todo 请求的网络数据，格式化？并传入
+                    child: _getItem(index),
+                  ),
+                );
+              },
+              childCount: 50, // 列表项的数量
             ),
-          )
+          ),
         ]),
         //主体
 
+        // todo 优化底部导航栏
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           items: const [
@@ -102,5 +95,93 @@ class _homeState extends State<home> {
             });
           },
         )); //底部导航栏
+  }
+
+  Widget _getItem(int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Card(
+          child: Image.network(
+            'https://tu.ltyuanfang.cn/api/fengjing.php',
+            fit: BoxFit.cover,
+            width: 140,
+            height: 90,
+          ),
+          clipBehavior: Clip.antiAlias,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0))),
+        ),
+        SizedBox(width: 5),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // 主要文本
+            children: <Widget>[
+              SizedBox(height: 8),
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    // SizedBox(height: 20),
+                    Text('这是一个标题',
+                        softWrap: true,
+                        maxLines: 2,
+                        style: getStyle(Colors.black, 15.0, bold: true)),
+                    // todo 对齐问题
+/*                    Row(
+                      textDirection: TextDirection.rtl,
+                      children: <Widget>[
+                        Icon(Icons.sentiment_satisfied_outlined,size: 20,),
+                        Text('5409',softWrap: false, style: getStyle(Colors.grey, 12.4))
+                      ],
+                    ),*/
+                    // SizedBox(height: 2.4),
+                  ]),
+              SizedBox(height: 2.4),
+              Column(
+                children: [
+                  Text(
+                      '这是一个副标题000000000000000000000000000000000000000000000000000000000',
+                      softWrap: true,
+                      maxLines: 3,
+                      style: getStyle(Colors.grey, 13.0)),
+                ],
+              ),
+              // 数据标签
+              // todo 位置错误，应始终置底，or 固定副标题高度
+              Row(textDirection: TextDirection.rtl, children: <Widget>[
+                Icon(
+                  Icons.sentiment_satisfied_outlined,
+                  size: 12.4,
+                ),
+                SizedBox(width: 2.4),
+                Text('5409',
+                    softWrap: false, style: getStyle(Colors.grey, 12.4)),
+              ])
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+/*        Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              Icon(Icons.sentiment_satisfied_outlined,size: 20,),
+              SizedBox(height: 2.4),
+              Text('5409',softWrap: false, style: getStyle(Colors.grey, 12.4)),
+            ]
+        )*/
+      ],
+    );
+  }
+
+  TextStyle getStyle(Color color, double fontSize, {bool bold = false}) {
+    return TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontWeight: bold ? FontWeight.bold : FontWeight.normal);
   }
 }

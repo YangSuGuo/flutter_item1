@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
+  // 状态栏沉浸
   if (Platform.isAndroid) {
     SystemUiOverlayStyle style = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
