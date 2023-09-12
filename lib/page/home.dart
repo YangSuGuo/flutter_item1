@@ -10,8 +10,8 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  int _currentIndex = 0;
-  final _inactiveColor = Colors.grey;
+  int _currentIndex = 0; // 底部导航栏索引
+  final _inactiveColor = Colors.grey; // 非激活颜色
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _homeState extends State<home> {
     );
 
     return Scaffold(
-        appBar: AppBar(
+/*        appBar: AppBar(
           backgroundColor: Color.fromRGBO(255, 255, 255, 1),
           centerTitle: true,
           elevation: 0,
@@ -33,7 +33,7 @@ class _homeState extends State<home> {
                 fontSize: 25,
                 color: Color.fromRGBO(0, 0, 0, 1),
                 letterSpacing: 10),
-          ),
+          ),*/
 /*          leading: IconButton(
             icon: Icon(Icons.dashboard_customize_sharp,color: Colors.black),
             onPressed: (){},
@@ -43,25 +43,44 @@ class _homeState extends State<home> {
                 onPressed: () {},
               ),
             ]*/
-        ),
+        // ),
         //顶部导航栏
 
         body: CustomScrollView(slivers: [
           const SliverAppBar(
-            // todo 浮动分类选择器【样式未知】
-            // todo 滑动选择【手势适配】
-            floating: true,
-            // todo 功能分类栏
-            flexibleSpace: Image(
+              // todo 浮动分类选择器【样式未知】
+              // todo 滑动选择【手势适配】
+              // floating: true,
+              stretch: true,
+              expandedHeight: 175,
+              // todo 功能分类栏
+              flexibleSpace: FlexibleSpaceBar(
+                title: const Text(
+                  'NEWS',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      letterSpacing: 10),
+                ),
+                stretchModes: [
+                  StretchMode.fadeTitle,
+                  StretchMode.zoomBackground,
+                  StretchMode.blurBackground
+                ],
+                background: Image(
+                    image: NetworkImage(
+                        'https://tu.ltyuanfang.cn/api/fengjing.php')),
+              )
+              /* Image(
               image: NetworkImage(
                 'https://tu.ltyuanfang.cn/api/fengjing.php',
               ),
               fit: BoxFit.cover,
-            ),
-            expandedHeight: 75,
-          ),
+            ),*/
+              ),
           // todo 1.列表化卡片
-          // todo 2.dio网络请求渲染
+          // todo 2.dio网络请求渲染，加载占位图
           // todo 3.索引列表点击，获取文章id，请求文章详情
           // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
           SliverList(
@@ -82,7 +101,7 @@ class _homeState extends State<home> {
         ]),
         //主体
 
-        bottomNavigationBar: BottomNavigationBar(
+        /*bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           selectedFontSize: 11.4,
           unselectedFontSize: 0.0,
@@ -100,7 +119,8 @@ class _homeState extends State<home> {
               _currentIndex = index;
             });
           },
-        )); //底部导航栏
+        )); */ //底部导航栏
+        bottomNavigationBar: _buildBottomBar());
   }
 
   Widget _getItem(int index) {
@@ -191,35 +211,36 @@ class _homeState extends State<home> {
         fontSize: fontSize,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal);
   }
+
 // 自定义底部导航栏
   Widget _buildBottomBar() {
     return CustomAnimatedBottomBar(
-      containerHeight: 70,
-      backgroundColor: Colors.black,
+      containerHeight: 66,
+      backgroundColor: Colors.white,
       selectedIndex: _currentIndex,
       showElevation: true,
-      itemCornerRadius: 24,
+      itemCornerRadius: 50,
       curve: Curves.easeIn,
       onItemSelected: (index) => setState(() => _currentIndex = index),
       items: <BottomNavyBarItem>[
         BottomNavyBarItem(
-          icon: Icon(Icons.apps),
-          title: Text('Home'),
+          icon: Icon(Icons.home),
+          title: Text('Home '),
           activeColor: Colors.green,
           inactiveColor: _inactiveColor,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: Icon(Icons.people),
-          title: Text('Users'),
+          icon: Icon(Icons.bar_chart),
+          title: Text('Hot '),
           activeColor: Colors.purpleAccent,
           inactiveColor: _inactiveColor,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: Icon(Icons.message),
+          icon: Icon(Icons.person),
           title: Text(
-            'Messages ',
+            'User ',
           ),
           activeColor: Colors.pink,
           inactiveColor: _inactiveColor,
@@ -227,7 +248,7 @@ class _homeState extends State<home> {
         ),
         BottomNavyBarItem(
           icon: Icon(Icons.settings),
-          title: Text('Settings'),
+          title: Text('Settings '),
           activeColor: Colors.blue,
           inactiveColor: _inactiveColor,
           textAlign: TextAlign.center,
