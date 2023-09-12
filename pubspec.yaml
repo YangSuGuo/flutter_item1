@@ -20,6 +20,8 @@ dependencies:
   shared_preferences: ^2.2.1
   cached_network_image: ^3.2.3
   intl: ^0.18.1
+  fluro: ^2.0.5 # 路由管理
+  infinite_grouped_list: ^1.1.2 #无限滚动列表
 
 dev_dependencies:
   flutter_test:

@@ -5,11 +5,10 @@ import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
-  if(Platform.isAndroid){
+  if (Platform.isAndroid) {
     SystemUiOverlayStyle style = const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light
-    );
+        statusBarIconBrightness: Brightness.light);
     SystemChrome.setSystemUIOverlayStyle(style);
   }
 }
