@@ -63,6 +63,10 @@ class _homeState extends State<home> {
           // todo 2.dio网络请求渲染，加载占位图
           // todo 3.索引列表点击，获取文章id，请求文章详情
           // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
+          ////////////////////[学习]/////////////////////////////
+          // todo 5.flutter 路由
+          // todo 6.flutter 数据持久化存储，缓存
+          // todo 7.flutter 压缩包体积，网络api，本机api
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -108,8 +112,9 @@ class _homeState extends State<home> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Card(
-          child: Image.network(
-            'https://tu.ltyuanfang.cn/api/fengjing.php',
+          child: FadeInImage.assetNetwork(
+            placeholder: 'assets\loading.gif',
+            image: 'https://tu.ltyuanfang.cn/api/fengjing.php',
             fit: BoxFit.cover,
             width: 140,
             height: 90,
@@ -145,14 +150,13 @@ class _homeState extends State<home> {
                     // SizedBox(height: 2.4),
                   ]),
               SizedBox(height: 2.4),
-              Column(
-                children: [
-                  Text(
-                      '这是一个副标题000000000000000000000000000000000000000000000000000000000',
-                      softWrap: true,
-                      maxLines: 3,
-                      style: getStyle(Colors.grey, 13.0)),
-                ],
+              Container(
+                height: 50,
+                child: Text(
+                    '这是一个副标题000000000000000000000000000000000000000000000000000000000',
+                    softWrap: true,
+                    maxLines: 3,
+                    style: getStyle(Colors.grey, 13.0)),
               ),
               // 数据标签
               // todo 位置错误，应始终置底，or 固定副标题高度
@@ -238,7 +242,7 @@ class _homeState extends State<home> {
     );
   }
 
-  Widget getBody() {
+/*  Widget getBody() {
     List<Widget> pages = [
       Container(
         alignment: Alignment.center,
@@ -273,5 +277,5 @@ class _homeState extends State<home> {
       index: _currentIndex,
       children: pages,
     );
-  }
+  }*/
 }
