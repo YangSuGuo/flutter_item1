@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trees>
     <tree path="/lib/common/utils/custom_animated_bottom_bar.dart" title="自定义底部导航栏"/>
+    <tree path="/lib/http/error_handle.dart" title="错误封装"/>
+    <tree path="/lib/http/http_api.dart" title="api"/>
+    <tree path="/lib/http/dio_utils.dart" title="dio封装"/>
+    <tree path="/lib/http/base_entity.dart" title="返回格式统一"/>
+    <tree path="/lib/http/entity/zhihu_daily_entity.dart" title="知乎列表"/>
+    <tree path="/lib/http/entity/zhihu_body_entity.dart" title="知乎正文"/>
+    <tree path="/lib/generated" title="自动生成"/>
+    <tree path="/lib/http" title="Dio请求"/>
+    <tree path="/lib/page" title="页面"/>
+    <tree path="/lib/page/home" title="首页" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
+          backgroundColor=""/>
+    <tree path="/lib/router" title="路由"/>
 </trees>

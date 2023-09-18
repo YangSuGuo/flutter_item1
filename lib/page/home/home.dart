@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
@@ -11,9 +13,15 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  int _itemIndex = 0;
   int _currentIndex = 0; // 底部导航栏索引
   final _inactiveColor = Colors.grey; // 非激活颜色
+  late Future<List<Map<String, dynamic>>> _itemsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemsFuture = _getList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +62,10 @@ class _homeState extends State<home> {
               fit: BoxFit.cover,
             ),
           ),
+
           // todo 1.列表化卡片
           // todo 2.dio网络请求渲染，加载占位图，请求的网络数据，格式化？并传入_getItem
+          // todo 【可选：将请求内容【包括图片】存入缓存，避免重复请求渲染】
           // todo 3.索引列表点击，获取文章id，请求文章详情
           // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
           ////////////////////[学习]/////////////////////////////
@@ -64,44 +74,61 @@ class _homeState extends State<home> {
           // todo 7.flutter 压缩包体积，网络api，本机api
 
           // 其他的 sliver 组件
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    // todo 请求的网络数据，格式化？并传入_getItem
-                    // child: _getItem(index),
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future: _itemsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SliverToBoxAdapter(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                  child: Text('错误：${snapshot.error}'),
+                );
+              } else if (snapshot.hasData) {
+                // 检查是否有数据
+                final items = snapshot.data!;
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: _getItem(items[index]),
+                        ),
+                      );
+                    },
+                    childCount: items.length,
                   ),
                 );
-              },
-              // childCount: items.length,
-            ),
-          ),
+              } else {
+                return SliverToBoxAdapter(
+                  child: Text('没有数据'),
+                );
+              }
+            },
+          )
         ]),
         //主体
         bottomNavigationBar: _buildBottomBar());
   }
 
-  Future<void> fetchAndRenderData() async {
+  Future<List<Map<String, dynamic>>> _getList() async {
     try {
-      // 发起GET请求
       final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
-    } catch (e) {}
+      if (response.statusCode == 200) {
+        final data = json.decode(response.data);
+        final List<Map<String, dynamic>> items =
+            data['stories'].cast<Map<String, dynamic>>();
+        return items;
+      } else {
+        throw Exception('加载数据失败');
+      }
+    } catch (e) {
+      throw Exception('错误：$e');
+    }
   }
-
-/*
-  void testListData() {
-    /// 测试返回List类型数据解析
-    asyncRequestNetwork<List<ZhihuBodyEntity>>(Method.get,
-      HttpApi.zhihu_list
-      onSuccess: (data) {
-
-      },
-    );
-  }
-*/
 
   Widget _getItem(Map<String, dynamic> item) {
     return Row(
@@ -131,11 +158,14 @@ class _homeState extends State<home> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     // SizedBox(height: 20),
-                    Text(item['title'],
-                        softWrap: true,
-                        maxLines: 2,
-                        style: getStyle(Colors.black, 15.0, bold: true)),
-                    // SizedBox(height: 2.4),
+                    Expanded(
+                      child: Text(item['title'],
+                          softWrap: true,
+                          maxLines: 2,
+                          // overflow
+                          style: getStyle(Colors.black, 15.0, bold: true)),
+                      // SizedBox(height: 2.4),
+                    )
                   ]),
               SizedBox(height: 2.4),
               Container(
@@ -146,15 +176,13 @@ class _homeState extends State<home> {
                     style: getStyle(Colors.grey, 13.0)),
               ),
               // 数据标签
-              // todo 位置错误，应始终置底，or 固定副标题高度
-              // todo 待办
               Row(textDirection: TextDirection.rtl, children: <Widget>[
                 Icon(
                   Icons.sentiment_satisfied_outlined,
                   size: 12.4,
                 ),
                 SizedBox(width: 2.4),
-                Text(item['id'],
+                Text(item['id'].toString(),
                     softWrap: false, style: getStyle(Colors.grey, 12.4)),
               ])
             ],

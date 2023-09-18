@@ -13,6 +13,25 @@ class _homeState extends State<home> {
   int _currentIndex = 0; // 底部导航栏索引
   final _inactiveColor = Colors.grey; // 非激活颜色
 
+/*  SliverList(
+  delegate: SliverChildBuilderDelegate(
+  (context, index) {
+  future: _getList();
+  return Padding(
+  padding: EdgeInsets.all(10.0),
+  child: GestureDetector(
+  behavior: HitTestBehavior.translucent,
+  // todo 请求的网络数据，格式化？并传入_getItem
+  child: _getItem(items![index]),
+  ),
+  );
+  },
+  childCount: items!.length,
+  ),
+  ),
+  ]),
+  */
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
@@ -57,7 +76,7 @@ class _homeState extends State<home> {
           ////////////////////[学习]/////////////////////////////
           // todo 5.flutter 路由
           // todo 6.flutter 数据持久化存储，缓存
-          // todo 7.flutter 压缩包体积，网络api，本机api
+          // todo 7.flutter 打包，api
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {

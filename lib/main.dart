@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:item_1/page/home.dart';
+import 'package:item_1/page/home/home.dart';
 
 void main() {
   runApp(const MyApp());
