@@ -79,12 +79,22 @@ class _homeState extends State<home> {
             future: _itemsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // todo 骨架屏
+                // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
                 return SliverToBoxAdapter(
-                  child: GFShimmer(
-                    child: emptyBlock,
-                  ),
-                );
+                    child: Column(
+                  children: [
+                    SizedBox(height: 20), // 增加200的高度
+                    GFShimmer(
+                      duration: const Duration(milliseconds: 4000),
+                      child: emptyBlock,
+                    ),
+                  ],
+                ));
+              } else if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                    // todo 提示弹框【无网络】
+                    // todo 调用本地缓存加载列表
+                    child: Text('无网络'));
               } else {
                 final items = snapshot.data!;
                 return SliverList(
@@ -125,6 +135,7 @@ class _homeState extends State<home> {
     }
   }
 
+  // 列表
   Widget _getItem(Map<String, dynamic> item) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,8 +261,8 @@ class _homeState extends State<home> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 54,
-          height: 46,
+          width: 140,
+          height: 100,
           color: Colors.white,
         ),
         const SizedBox(width: 12),
@@ -261,20 +272,30 @@ class _homeState extends State<home> {
             children: <Widget>[
               Container(
                 width: double.infinity,
+                height: 24,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: double.infinity,
                 height: 8,
                 color: Colors.white,
               ),
               const SizedBox(height: 6),
               Container(
-                // width: MediaQuery.of(context).size.width * 0.5,
-                width: 300,
+                width: 150,
                 height: 8,
                 color: Colors.white,
               ),
               const SizedBox(height: 6),
               Container(
-                width: 300,
-                // width: MediaQuery.of(context).size.width * 0.25,
+                width: 100,
+                height: 8,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: 20,
                 height: 8,
                 color: Colors.white,
               ),
