@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:getwidget/components/card/gf_card.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
-import 'package:item_1/http/zhihu_api.dart';
+import 'package:item_1/http/net.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -67,14 +66,42 @@ class _homeState extends State<home> {
           // 其他的 sliver 组件
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) {},
-              childCount: items.length,
+              (context, index) {
+                return Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    // todo 请求的网络数据，格式化？并传入_getItem
+                    // child: _getItem(index),
+                  ),
+                );
+              },
+              // childCount: items.length,
             ),
           ),
         ]),
         //主体
         bottomNavigationBar: _buildBottomBar());
   }
+
+  Future<void> fetchAndRenderData() async {
+    try {
+      // 发起GET请求
+      final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
+    } catch (e) {}
+  }
+
+/*
+  void testListData() {
+    /// 测试返回List类型数据解析
+    asyncRequestNetwork<List<ZhihuBodyEntity>>(Method.get,
+      HttpApi.zhihu_list
+      onSuccess: (data) {
+
+      },
+    );
+  }
+*/
 
   Widget _getItem(Map<String, dynamic> item) {
     return Row(

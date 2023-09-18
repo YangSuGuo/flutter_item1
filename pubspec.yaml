@@ -22,6 +22,9 @@ dependencies:
   intl: ^0.18.1
   fluro: ^2.0.5 # 路由管理
   infinite_grouped_list: ^1.1.2 #无限滚动列表
+  # 工具库
+  common_utils: 2.1.0
+  sp_util: 2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -32,4 +35,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets\loading.gif
+    - assets\image\loading.gif

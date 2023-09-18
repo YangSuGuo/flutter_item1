@@ -32,15 +32,6 @@ class _homeState extends State<home> {
             style:
                 TextStyle(fontSize: 25, color: Colors.black, letterSpacing: 8),
           ),
-/*          leading: IconButton(
-            icon: Icon(Icons.dashboard_customize_sharp,color: Colors.black),
-            onPressed: (){},
-          ),
-            actions: <Widget>[
-              IconButton(icon: Icon(Icons.scatter_plot,color: Colors.black),
-                onPressed: () {},
-              ),
-            ]*/
         ),
         //顶部导航栏
 
@@ -84,26 +75,6 @@ class _homeState extends State<home> {
           ),
         ]),
         //主体
-
-        /*bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          selectedFontSize: 11.4,
-          unselectedFontSize: 0.0,
-          iconSize: 25,
-          enableFeedback: true,
-          showUnselectedLabels: false,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-            BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: '热榜'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
-          ],
-          //点击事件
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        )); */ //底部导航栏
         bottomNavigationBar: _buildBottomBar());
   }
 
@@ -113,7 +84,7 @@ class _homeState extends State<home> {
       children: <Widget>[
         Card(
           child: FadeInImage.assetNetwork(
-            placeholder: 'assets\loading.gif',
+            placeholder: 'assets/image/loading.gif',
             image: 'https://tu.ltyuanfang.cn/api/fengjing.php',
             fit: BoxFit.cover,
             width: 140,
@@ -176,15 +147,6 @@ class _homeState extends State<home> {
         SizedBox(
           width: 5,
         ),
-/*        Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 20),
-              Icon(Icons.sentiment_satisfied_outlined,size: 20,),
-              SizedBox(height: 2.4),
-              Text('5409',softWrap: false, style: getStyle(Colors.grey, 12.4)),
-            ]
-        )*/
       ],
     );
   }
@@ -241,41 +203,4 @@ class _homeState extends State<home> {
       ],
     );
   }
-
-/*  Widget getBody() {
-    List<Widget> pages = [
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "Home",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "Users",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "Messages",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "Settings",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-    ];
-    return IndexedStack(
-      index: _currentIndex,
-      children: pages,
-    );
-  }*/
 }
