@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
 import 'package:item_1/http/net.dart';
 
@@ -78,15 +79,13 @@ class _homeState extends State<home> {
             future: _itemsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
+                // todo 骨架屏
                 return SliverToBoxAdapter(
-                  child: CircularProgressIndicator(),
+                  child: GFShimmer(
+                    child: emptyBlock,
+                  ),
                 );
-              } else if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Text('错误：${snapshot.error}'),
-                );
-              } else if (snapshot.hasData) {
-                // 检查是否有数据
+              } else {
                 final items = snapshot.data!;
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
@@ -101,10 +100,6 @@ class _homeState extends State<home> {
                     },
                     childCount: items.length,
                   ),
-                );
-              } else {
-                return SliverToBoxAdapter(
-                  child: Text('没有数据'),
                 );
               }
             },
@@ -247,4 +242,46 @@ class _homeState extends State<home> {
       ],
     );
   }
+
+  // 骨架屏
+  final Widget emptyBlock = Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 54,
+          height: 46,
+          color: Colors.white,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 8,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                // width: MediaQuery.of(context).size.width * 0.5,
+                width: 300,
+                height: 8,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: 300,
+                // width: MediaQuery.of(context).size.width * 0.25,
+                height: 8,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
 }

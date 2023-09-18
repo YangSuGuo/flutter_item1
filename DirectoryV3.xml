@@ -13,4 +13,5 @@
     <tree path="/lib/page/home" title="首页" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
           backgroundColor=""/>
     <tree path="/lib/router" title="路由"/>
+    <tree path="/lib/page/home.dart" title="旧版本"/>
 </trees>

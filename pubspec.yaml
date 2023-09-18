@@ -25,6 +25,7 @@ dependencies:
   # 工具库
   common_utils: 2.1.0
   sp_util: 2.0.3
+  getwidget: ^2.0.4 # ui库
 
 dev_dependencies:
   flutter_test:
