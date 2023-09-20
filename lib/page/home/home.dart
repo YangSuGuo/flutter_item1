@@ -46,7 +46,15 @@ class _homeState extends State<home> {
         ),
         //顶部导航栏
 
-        body: CustomScrollView(slivers: [
+        body: _buildBody(),
+        //主体
+        bottomNavigationBar: _buildBottomBar());
+  }
+
+  Widget _buildBody() {
+    return CustomScrollView(
+      slivers: [
+/*
           const SliverAppBar(
             // todo 浮动分类选择器【样式未知】
             // todo 滑动选择【手势适配】
@@ -63,62 +71,64 @@ class _homeState extends State<home> {
               fit: BoxFit.cover,
             ),
           ),
+*/
 
-          // todo 1.列表化卡片
-          // todo 2.dio网络请求渲染，加载占位图，请求的网络数据，格式化？并传入_getItem
-          // todo 【可选：将请求内容【包括图片】存入缓存，避免重复请求渲染】
-          // todo 3.索引列表点击，获取文章id，请求文章详情
-          // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
-          ////////////////////[学习]/////////////////////////////
-          // todo 5.flutter 路由，夜间模式
-          // todo 6.flutter 数据持久化存储，缓存
-          // todo 7.flutter 压缩包体积，网络api，本机api
-
-          // 其他的 sliver 组件
-          FutureBuilder<List<Map<String, dynamic>>>(
-            future: _itemsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
-                return SliverToBoxAdapter(
-                    child: Column(
-                  children: [
-                    SizedBox(height: 20), // 增加200的高度
-                    GFShimmer(
-                      duration: const Duration(milliseconds: 4000),
-                      child: emptyBlock,
-                    ),
-                  ],
-                ));
-              } else if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                    // todo 提示弹框【无网络】
-                    // todo 调用本地缓存加载列表
-                    child: Text('无网络'));
-              } else {
-                final items = snapshot.data!;
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: _getItem(items[index]),
-                        ),
-                      );
-                    },
-                    childCount: items.length,
+        // todo 1.列表化卡片
+        // todo 2.dio网络请求渲染，加载占位图，请求的网络数据，格式化？并传入_getItem
+        // todo 【可选：将请求内容【包括图片】存入缓存，避免重复请求渲染】
+        // todo 3.索引列表点击，获取文章id，请求文章详情
+        // todo 4.手势适配，下拉刷新，分页处理无限下划【可选】
+        ////////////////////[学习]/////////////////////////////
+        // todo 5.flutter 路由，夜间模式
+        // todo 6.flutter 数据持久化存储，缓存
+        // todo 7.flutter 压缩包体积，网络api，本机api
+        // todo GestureDetector包裹用于处理点击事件并传值item【id】来获取正文内容
+        // 其他的 sliver 组件
+        FutureBuilder<List<Map<String, dynamic>>>(
+          future: _itemsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
+              return SliverToBoxAdapter(
+                  child: Column(
+                children: [
+                  SizedBox(height: 20), // 增加200的高度
+                  GFShimmer(
+                    duration: const Duration(milliseconds: 1000),
+                    child: emptyBlock,
                   ),
-                );
-              }
-            },
-          )
-        ]),
-        //主体
-        bottomNavigationBar: _buildBottomBar());
+                ],
+              ));
+            } else if (snapshot.hasError) {
+              return SliverToBoxAdapter(
+                  // todo 提示弹框【无网络】
+                  // todo 调用本地缓存加载列表
+                  child: Text('无网络'));
+            } else {
+              final items = snapshot.data!;
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: GestureDetector(
+                        // todo 点击事件
+                        behavior: HitTestBehavior.translucent,
+                        child: _getItem(items[index]),
+                      ),
+                    );
+                  },
+                  childCount: items.length,
+                ),
+              );
+            }
+          },
+        )
+      ],
+    );
   }
 
+  // 获取数据
   Future<List<Map<String, dynamic>>> _getList() async {
     try {
       final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
