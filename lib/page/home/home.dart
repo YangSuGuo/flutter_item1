@@ -33,12 +33,14 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   int _currentIndex = 0; // 底部导航栏索引
   final _inactiveColor = Colors.grey; // 非激活颜色
-  late Future<List<Map<String, dynamic>>> _itemsFuture;
+  late Future<List<Map<String, dynamic>>> _itemsFuture; // 知乎日报
+  late Future<List<Map<String, dynamic>>> _itemsSelected; // 日报精选
 
   @override
   void initState() {
     super.initState();
     _itemsFuture = _getList();
+    _itemsSelected = _getStories();
   }
 
   @override
@@ -49,20 +51,23 @@ class _homeState extends State<home> {
     );
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          elevation: 0,
-          // toolbarHeight: 65,
-          title: const Text(
-            'NEWS',
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(fontSize: 25, color: Colors.black, letterSpacing: 8),
-          ),
-        ),
+        appBar: _buildAppBar(),
         body: _buildBody(),
         bottomNavigationBar: _buildBottomBar());
+  }
+
+  // appbar
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      centerTitle: true,
+      elevation: 0,
+      title: const Text(
+        'NEWS',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 25, color: Colors.black, letterSpacing: 8),
+      ),
+    );
   }
 
   // body
@@ -113,6 +118,51 @@ class _homeState extends State<home> {
     );
   }
 
+  // 自定义底部导航栏
+  Widget _buildBottomBar() {
+    return CustomAnimatedBottomBar(
+      containerHeight: 66,
+      backgroundColor: Colors.white,
+      selectedIndex: _currentIndex,
+      showElevation: true,
+      itemCornerRadius: 50,
+      curve: Curves.easeIn,
+      onItemSelected: (index) => setState(() => _currentIndex = index),
+      items: <BottomNavyBarItem>[
+        BottomNavyBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home '),
+          activeColor: Colors.green,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.bar_chart),
+          title: Text('Hot '),
+          activeColor: Colors.purpleAccent,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.person),
+          title: Text(
+            'User ',
+          ),
+          activeColor: Colors.pink,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+        BottomNavyBarItem(
+          icon: Icon(Icons.settings),
+          title: Text('Settings '),
+          activeColor: Colors.blue,
+          inactiveColor: _inactiveColor,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
   // 获取数据
   Future<List<Map<String, dynamic>>> _getList() async {
     try {
@@ -121,7 +171,26 @@ class _homeState extends State<home> {
         final data = json.decode(response.data);
         final List<Map<String, dynamic>> items =
             data['stories'].cast<Map<String, dynamic>>();
+
+        final List<Map<String, dynamic>> selectedItems =
+            data['top_stories'].cast<Map<String, dynamic>>();
         return items;
+      } else {
+        throw Exception('加载数据失败');
+      }
+    } catch (e) {
+      throw Exception('错误：$e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getStories() async {
+    try {
+      final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.data);
+        final List<Map<String, dynamic>> selectedItems =
+            data['top_stories'].cast<Map<String, dynamic>>();
+        return selectedItems;
       } else {
         throw Exception('加载数据失败');
       }
@@ -202,51 +271,6 @@ class _homeState extends State<home> {
         color: color,
         fontSize: fontSize,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal);
-  }
-
-// 自定义底部导航栏
-  Widget _buildBottomBar() {
-    return CustomAnimatedBottomBar(
-      containerHeight: 66,
-      backgroundColor: Colors.white,
-      selectedIndex: _currentIndex,
-      showElevation: true,
-      itemCornerRadius: 50,
-      curve: Curves.easeIn,
-      onItemSelected: (index) => setState(() => _currentIndex = index),
-      items: <BottomNavyBarItem>[
-        BottomNavyBarItem(
-          icon: Icon(Icons.home),
-          title: Text('Home '),
-          activeColor: Colors.green,
-          inactiveColor: _inactiveColor,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.bar_chart),
-          title: Text('Hot '),
-          activeColor: Colors.purpleAccent,
-          inactiveColor: _inactiveColor,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.person),
-          title: Text(
-            'User ',
-          ),
-          activeColor: Colors.pink,
-          inactiveColor: _inactiveColor,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.settings),
-          title: Text('Settings '),
-          activeColor: Colors.blue,
-          inactiveColor: _inactiveColor,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
   }
 
   // 骨架屏
