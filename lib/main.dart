@@ -11,7 +11,6 @@ void main() {
   if (Platform.isAndroid) {
     SystemUiOverlayStyle style = const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      // statusBarIconBrightness: Brightness.light
     );
     SystemChrome.setSystemUIOverlayStyle(style);
   }
