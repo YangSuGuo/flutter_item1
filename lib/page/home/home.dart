@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
 import 'package:item_1/http/net.dart';
+import 'package:item_1/page/account/account.dart';
 
 // todo 将页面划分层，网络请求数据层，UI层，UI实现层
 // todo 至少吧一堆小部件分开处理
@@ -83,13 +84,7 @@ class _homeState extends State<home> {
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
       ),
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "User",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
+      account(),
       Container(
         alignment: Alignment.center,
         child: Text(
