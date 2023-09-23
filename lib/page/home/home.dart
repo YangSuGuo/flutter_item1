@@ -6,6 +6,9 @@ import 'package:getwidget/getwidget.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
 import 'package:item_1/http/net.dart';
 
+// todo 将页面划分层，网络请求数据层，UI层，UI实现层
+// todo 至少吧一堆小部件分开处理
+
 // todo 浮动分类选择器【样式未知】
 // todo 滑动选择【手势适配】
 // todo 功能分类栏
@@ -34,13 +37,12 @@ class _homeState extends State<home> {
   int _currentIndex = 0; // 底部导航栏索引
   final _inactiveColor = Colors.grey; // 非激活颜色
   late Future<List<Map<String, dynamic>>> _itemsFuture; // 知乎日报
-  late Future<List<Map<String, dynamic>>> _itemsSelected; // 日报精选
+  // todo 日报精选
 
   @override
   void initState() {
     super.initState();
     _itemsFuture = _getList();
-    _itemsSelected = _getStories();
   }
 
   @override
@@ -52,7 +54,7 @@ class _homeState extends State<home> {
 
     return Scaffold(
         appBar: _buildAppBar(),
-        body: _buildBody(),
+        body: getBody(),
         bottomNavigationBar: _buildBottomBar());
   }
 
@@ -70,51 +72,35 @@ class _homeState extends State<home> {
     );
   }
 
-  // body
-  Widget _buildBody() {
-    return CustomScrollView(
-      slivers: [
-        FutureBuilder<List<Map<String, dynamic>>>(
-          future: _itemsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
-              return SliverToBoxAdapter(
-                  child: Column(
-                children: [
-                  SizedBox(height: 20), // 增加200的高度
-                  GFShimmer(
-                    duration: const Duration(milliseconds: 1000),
-                    child: emptyBlock,
-                  ),
-                ],
-              ));
-            } else if (snapshot.hasError) {
-              return SliverToBoxAdapter(
-                  // todo 提示弹框【无网络】
-                  // todo 调用本地缓存加载列表
-                  child: Text('无网络'));
-            } else {
-              final items = snapshot.data!;
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: GestureDetector(
-                        // todo 点击事件
-                        behavior: HitTestBehavior.translucent,
-                        child: _getItem(items[index]),
-                      ),
-                    );
-                  },
-                  childCount: items.length,
-                ),
-              );
-            }
-          },
-        )
-      ],
+  // Body
+  Widget getBody() {
+    List<Widget> pages = [
+      _buildBody(),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Hot",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "User",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Settings",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ];
+    return IndexedStack(
+      index: _currentIndex,
+      children: pages,
     );
   }
 
@@ -163,6 +149,54 @@ class _homeState extends State<home> {
     );
   }
 
+  // list
+  Widget _buildBody() {
+    return CustomScrollView(
+      slivers: [
+        FutureBuilder<List<Map<String, dynamic>>>(
+          future: _itemsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
+              return SliverToBoxAdapter(
+                  child: Column(
+                children: [
+                  SizedBox(height: 20), // 增加200的高度
+                  GFShimmer(
+                    duration: const Duration(milliseconds: 1000),
+                    child: emptyBlock,
+                  ),
+                ],
+              ));
+            } else if (snapshot.hasError) {
+              return SliverToBoxAdapter(
+                  // todo 提示弹框【无网络】
+                  // todo 调用本地缓存加载列表
+                  child: Text('无网络'));
+            } else {
+              final items = snapshot.data!;
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: GestureDetector(
+                        // todo 点击事件
+                        behavior: HitTestBehavior.translucent,
+                        child: _getItem(items[index]),
+                      ),
+                    );
+                  },
+                  childCount: items.length,
+                ),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
   // 获取数据
   Future<List<Map<String, dynamic>>> _getList() async {
     try {
@@ -175,22 +209,6 @@ class _homeState extends State<home> {
         final List<Map<String, dynamic>> selectedItems =
             data['top_stories'].cast<Map<String, dynamic>>();
         return items;
-      } else {
-        throw Exception('加载数据失败');
-      }
-    } catch (e) {
-      throw Exception('错误：$e');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> _getStories() async {
-    try {
-      final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.data);
-        final List<Map<String, dynamic>> selectedItems =
-            data['top_stories'].cast<Map<String, dynamic>>();
-        return selectedItems;
       } else {
         throw Exception('加载数据失败');
       }
