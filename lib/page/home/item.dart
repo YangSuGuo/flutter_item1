@@ -73,7 +73,7 @@ class item extends StatelessWidget {
             image: item['images'][0],
             fit: BoxFit.cover,
             width: 140,
-            height: 90,
+            height: 100,
           ),
         ),
         SizedBox(width: 5),
@@ -98,7 +98,7 @@ class item extends StatelessWidget {
                   ]),
               SizedBox(height: 2.4),
               Container(
-                height: 50,
+                height: 40,
                 child: Text(item['hint'],
                     softWrap: true,
                     maxLines: 3,

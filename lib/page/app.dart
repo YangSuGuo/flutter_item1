@@ -8,13 +8,13 @@ import 'package:item_1/page/account/account.dart';
 import 'package:item_1/page/home/item.dart';
 import 'package:item_1/page/set/set.dart';
 
-// todo 将页面划分层，网络请求数据层，UI层，实现层
+// todo 将页面划分层，网络请求数据层，UI层【至少将body分离】，实现层
 // todo 至少吧一堆小部件分开处理
 
 // todo 浮动分类选择器【样式未知】
 // todo 滑动选择【手势适配】
 // todo 功能分类栏
-// todo 数据分类，ListView的水平滑动图标按钮【知乎日报、科技、编程、公告、自然、校园、动漫、游戏】
+// todo 数据分类，ListView的水平滑动图标按钮【知乎日报、科技、编程、公告、自然、校园、动漫、游戏】tab栏
 // todo 选中将_getItem中数据重新获取并渲染
 
 // todo 1.列表化卡片
@@ -65,7 +65,7 @@ class _appState extends State<app> {
     return AppBar(
       backgroundColor: Colors.white,
       centerTitle: true,
-      elevation: 0,
+      elevation: 1.5,
       title: const Text(
         'NEWS',
         textAlign: TextAlign.center,

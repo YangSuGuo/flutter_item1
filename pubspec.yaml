@@ -37,3 +37,4 @@ flutter:
 
   assets:
     - assets\image\loading.gif
+    - assets\image\info.jpg

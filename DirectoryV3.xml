@@ -10,13 +10,15 @@
     <tree path="/lib/generated" title="自动生成"/>
     <tree path="/lib/http" title="Dio请求"/>
     <tree path="/lib/page" title="页面"/>
-    <tree path="/lib/page/home" title="首页" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
+    <tree path="/lib/page/home" title="列表" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
           backgroundColor=""/>
     <tree path="/lib/router" title="路由"/>
     <tree path="/lib/page/home.dart" title="旧版本"/>
     <tree path="/lib/page/login" title="登录"/>
-    <tree path="/pubspec.yaml" title="依赖管理"/>
+    <tree path="/pubspec.yaml" title="资源管理" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
+          backgroundColor=""/>
     <tree path="/DirectoryV3.xml" title="注释文件"/>
     <tree path="/lib/page/account" title="个人"/>
     <tree path="/lib/page/set" title="设置"/>
+    <tree path="/lib/page/app.dart" title="主体"/>
 </trees>
