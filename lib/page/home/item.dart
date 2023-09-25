@@ -91,9 +91,8 @@ class item extends StatelessWidget {
                       child: Text(item['title'],
                           softWrap: true,
                           maxLines: 2,
-                          // overflow
+                          overflow: TextOverflow.ellipsis,
                           style: getStyle(Colors.black, 15.0, bold: true)),
-                      // SizedBox(height: 2.4),
                     )
                   ]),
               SizedBox(height: 2.4),

@@ -8,7 +8,9 @@ class settings extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 250, 250, 250), body: Settings);
   }
 
-// todo 点击事件【路由跳转】
+  // todo 投稿不开放
+  // todo 我的收藏，历史记录【数据持久化存储，页面传参】
+  // todo 点击事件【路由跳转】
   Widget setListTile() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Card(

@@ -22,4 +22,5 @@
     <tree path="/lib/page/set" title="设置"/>
     <tree path="/lib/page/app.dart" title="主体"/>
     <tree path="/lib/page/Hot" title="热门"/>
+    <tree path="/lib/common/utils/image_button.dart" title="图片按钮"/>
 </trees>

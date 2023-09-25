@@ -1,4 +1,4 @@
-import 'package:item_1/generated/json/base/json_convert_content.dart';
+// import 'package:item_1/generated/json/base/json_convert_content.dart';
 
 class BaseEntity<T> {
   BaseEntity(this.code, this.message, this.data);
@@ -23,9 +23,9 @@ class BaseEntity<T> {
       return json.toString() as T;
     } else if (T.toString() == 'Map<dynamic, dynamic>') {
       return json as T;
-    } else {
+    } /*else {
       /// List类型数据由fromJsonAsT判断处理
       return JsonConvert.fromJsonAsT<T>(json);
-    }
+    }*/
   }
 }
