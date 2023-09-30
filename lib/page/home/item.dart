@@ -1,10 +1,62 @@
+import 'dart:convert';
+
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 
-class item extends StatelessWidget {
-  final Future<List<Map<String, dynamic>>> _itemsFuture;
+import '../../http/net.dart';
 
-  item(this._itemsFuture);
+class item extends StatefulWidget {
+  @override
+  State<item> createState() => _itemState();
+}
+
+class _itemState extends State<item> {
+  DateTime dateTime = DateTime.now(); // 时间
+  List<Map<String, dynamic>> items = []; // 知乎日报
+  int day = 0; //分页
+
+  @override
+  void initState() {
+    super.initState();
+    // 初始化数据
+    InitialData();
+  }
+
+  Future<void> InitialData() async {
+    try {
+      final newItems = await _getOldList(dateTime, day);
+      setState(() {
+        items.addAll(newItems);
+      });
+    } catch (e) {
+      print('加载初始数据失败: $e');
+    }
+  }
+
+  // 过去的知乎日报
+  Future<List<Map<String, dynamic>>> _getOldList(DateTime date, int i) async {
+    try {
+      final formattedDate = DateFormat('yyyyMMdd').format(date);
+      final response =
+          await DioUtils.instance.dio.get('stories/before/$formattedDate');
+      if (response.statusCode == 200) {
+        final data = json.decode(response.data);
+        final List<Map<String, dynamic>> items =
+            data['stories'].cast<Map<String, dynamic>>();
+        day = i++;
+        // 分页，当前刷新页数
+        print(i);
+        dateTime = date.subtract(Duration(days: i));
+        return items;
+      } else {
+        throw Exception('加载数据失败');
+      }
+    } catch (e) {
+      throw Exception('错误：$e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemList = _buildBody();
@@ -12,115 +64,91 @@ class item extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return CustomScrollView(
-      slivers: [
-        FutureBuilder<List<Map<String, dynamic>>>(
-          future: _itemsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // todo 骨架屏 ps：时间好短，不如不做，想加个延迟都去看骨架屏
-              return SliverToBoxAdapter(
-                  child: Column(
-                children: [
-                  SizedBox(height: 20), // 增加200的高度
-                  GFShimmer(
-                    duration: const Duration(milliseconds: 1000),
-                    child: emptyBlock,
-                  ),
-                ],
-              ));
-            } else if (snapshot.hasError) {
-              return SliverToBoxAdapter(
-                  // todo 提示弹框【无网络】
-                  // todo 调用本地缓存加载列表
-                  child: Text('无网络'));
-            } else {
-              final items = snapshot.data!;
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: GestureDetector(
-                        // todo 点击事件
-                        behavior: HitTestBehavior.translucent,
-                        child: _getItem(items[index]),
-                      ),
-                    );
-                  },
-                  childCount: items.length,
-                ),
-              );
-            }
-          },
-        )
-      ],
+    return EasyRefresh(
+      onRefresh: () async {
+        final newItems = await _getOldList(dateTime, 0);
+        setState(() {
+          items.addAll(newItems);
+        });
+      },
+      onLoad: () async {
+        // 上拉加载更多时，增加页数并请求新数据
+        final newItems = await _getOldList(dateTime, day);
+        setState(() {
+          items.addAll(newItems);
+        });
+      },
+      child: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.all(10.0),
+            child: _getItem(items[index]),
+          );
+        },
+      ),
     );
   }
 
   // 列表
   Widget _getItem(Map<String, dynamic> item) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Card(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0))),
-          child: FadeInImage.assetNetwork(
-            placeholder: 'assets/image/loading.gif',
-            image: item['images'][0],
-            fit: BoxFit.cover,
-            width: 140,
-            height: 100,
-          ),
-        ),
-        SizedBox(width: 5),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // 主要文本
-            children: <Widget>[
-              SizedBox(height: 8),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    // SizedBox(height: 20),
-                    Expanded(
-                      child: Text(item['title'],
-                          softWrap: true,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: getStyle(Colors.black, 15.0, bold: true)),
-                    )
-                  ]),
-              SizedBox(height: 2.4),
-              Container(
-                height: 40,
-                child: Text(item['hint'],
-                    softWrap: true,
-                    maxLines: 3,
-                    style: getStyle(Colors.grey, 13.0)),
+    return GestureDetector(
+        // todo 点击事件
+        behavior: HitTestBehavior.translucent,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Card(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/image/loading.gif',
+                image: item['images'][0],
+                fit: BoxFit.cover,
+                width: 140,
+                height: 100,
               ),
-              // 数据标签
-              Row(textDirection: TextDirection.rtl, children: <Widget>[
-                Icon(
-                  Icons.sentiment_satisfied_outlined,
-                  size: 12.4,
-                ),
-                SizedBox(width: 2.4),
-                Text(item['id'].toString(),
-                    softWrap: false, style: getStyle(Colors.grey, 12.4)),
-              ])
-            ],
-          ),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-      ],
-    );
+            ),
+            SizedBox(width: 5),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // 主要文本
+                children: [
+                  SizedBox(height: 8),
+                  Text(item['title'],
+                      softWrap: true,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: getStyle(Colors.black, 15.0, bold: true)),
+                  SizedBox(height: 2.4),
+                  Container(
+                    height: 40,
+                    child: Text(item['hint'],
+                        softWrap: true,
+                        maxLines: 3,
+                        style: getStyle(Colors.grey, 13.0)),
+                  ),
+                  // 数据标签
+                  Row(children: [
+                    Text(item['id'].toString(),
+                        softWrap: false, style: getStyle(Colors.grey, 12.4)),
+                    SizedBox(width: 2.4),
+                    Icon(
+                      Icons.sentiment_satisfied_outlined,
+                      size: 12.4,
+                    )
+                  ])
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+          ],
+        ));
   }
 
 // 字体样式
@@ -130,56 +158,4 @@ class item extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal);
   }
-
-  // 骨架屏
-  final Widget emptyBlock = Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 140,
-          height: 100,
-          color: Colors.white,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                height: 24,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 6),
-              Container(
-                width: double.infinity,
-                height: 8,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 6),
-              Container(
-                width: 150,
-                height: 8,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 6),
-              Container(
-                width: 100,
-                height: 8,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 6),
-              Container(
-                width: 20,
-                height: 8,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
 }

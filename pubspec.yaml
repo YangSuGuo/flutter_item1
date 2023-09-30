@@ -19,13 +19,12 @@ dependencies:
   crypto: ^3.0.3 #加密
   shared_preferences: ^2.2.1
   cached_network_image: ^3.2.3
-  intl: ^0.18.1
-  fluro: ^2.0.5 # 路由管理
-  infinite_grouped_list: ^1.1.2 #无限滚动列表
   # 工具库
+  intl: ^0.18.1
   common_utils: 2.1.0
   sp_util: 2.0.3
   getwidget: ^2.0.4 # ui库
+  easy_refresh: ^3.3.2+1 # 下拉刷新
 
 dev_dependencies:
   flutter_test:

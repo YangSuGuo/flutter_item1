@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
-import 'package:item_1/http/net.dart';
 import 'package:item_1/page/home/item.dart';
 import 'package:item_1/page/login/login.dart';
 import 'package:item_1/page/set/set.dart';
@@ -38,13 +35,10 @@ class app extends StatefulWidget {
 class _appState extends State<app> {
   int _currentIndex = 0; // 底部导航栏索引
   final _inactiveColor = Colors.grey; // 非激活颜色
-  late Future<List<Map<String, dynamic>>> _itemsFuture; // 知乎日报
-  // todo 日报精选
 
   @override
   void initState() {
     super.initState();
-    _itemsFuture = _getList();
   }
 
   @override
@@ -77,7 +71,7 @@ class _appState extends State<app> {
   // Body
   Widget getBody() {
     List<Widget> pages = [
-      item(_itemsFuture),
+      item(),
       Container(
         alignment: Alignment.center,
         child: Text(
@@ -137,25 +131,5 @@ class _appState extends State<app> {
         ),
       ],
     );
-  }
-
-  // 获取数据
-  Future<List<Map<String, dynamic>>> _getList() async {
-    try {
-      final response = await DioUtils.instance.dio.get(HttpApi.zhihu_list);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.data);
-        final List<Map<String, dynamic>> items =
-            data['stories'].cast<Map<String, dynamic>>();
-
-        final List<Map<String, dynamic>> selectedItems =
-            data['top_stories'].cast<Map<String, dynamic>>();
-        return items;
-      } else {
-        throw Exception('加载数据失败');
-      }
-    } catch (e) {
-      throw Exception('错误：$e');
-    }
   }
 }
