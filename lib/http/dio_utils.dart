@@ -58,6 +58,7 @@ class DioUtils {
     void addInterceptor(Interceptor interceptor) {
       _dio.interceptors.add(interceptor);
     }
+
     _interceptors.forEach(addInterceptor);
   }
 

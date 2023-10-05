@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
+import 'package:item_1/page/Hot/hot.dart';
 import 'package:item_1/page/home/item.dart';
-import 'package:item_1/page/login/login.dart';
 import 'package:item_1/page/set/set.dart';
 
 // todo 将页面划分层，网络请求数据层，UI层【至少将body分离】，实现层
@@ -72,14 +72,14 @@ class _appState extends State<app> {
   Widget getBody() {
     List<Widget> pages = [
       item(),
+      hot(),
       Container(
         alignment: Alignment.center,
         child: Text(
-          "Hot",
+          "User",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
       ),
-      login(),
       settings()
     ];
     return IndexedStack(

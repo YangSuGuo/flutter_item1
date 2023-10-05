@@ -19,6 +19,7 @@ dependencies:
   crypto: ^3.0.3 #加密
   shared_preferences: ^2.2.1
   cached_network_image: ^3.2.3
+  fluro: ^2.0.5
   # 工具库
   intl: ^0.18.1
   common_utils: 2.1.0

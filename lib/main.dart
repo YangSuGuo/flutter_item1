@@ -14,6 +14,10 @@ void main() {
     );
     SystemChrome.setSystemUIOverlayStyle(style);
   }
+
+  /// 路由
+  // final router = FluroRouter();
+  // Routes.configureRoutes(router);
 }
 
 class MyApp extends StatelessWidget {
