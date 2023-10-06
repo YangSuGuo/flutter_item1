@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:item_1/common/utils/custom_animated_bottom_bar.dart';
 import 'package:item_1/page/Hot/hot.dart';
+import 'package:item_1/page/home/body.dart';
 import 'package:item_1/page/home/item.dart';
 import 'package:item_1/page/set/set.dart';
 
@@ -72,15 +73,7 @@ class _appState extends State<app> {
   Widget getBody() {
     List<Widget> pages = [
       item(),
-      hot(),
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          "User",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-      settings()
+      hot(), essay(), settings()
     ];
     return IndexedStack(
       index: _currentIndex,

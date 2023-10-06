@@ -56,8 +56,8 @@ class _itemState extends State<item> {
   Future<List<Map<String, dynamic>>> _getOldList(DateTime date, int i) async {
     try {
       final formattedDate = DateFormat('yyyyMMdd').format(date);
-      final response =
-          await DioUtils.instance.dio.get('stories/before/$formattedDate');
+      final response = await DioUtils.instance.dio
+          .get(HttpApi.zhihu_oldList + '$formattedDate');
       if (response.statusCode == 200) {
         final data = json.decode(response.data);
         final List<Map<String, dynamic>> items =
