@@ -9,17 +9,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.2 #icon图标
-  flutter_screenutil: ^5.9.0 #屏幕适配
-  fluttertoast: ^8.2.2 #弹框
-  dio: ^5.3.2 #网络请求
-  cookie_jar: ^4.0.8 # cookie缓存
+  # icon图标
+  cupertino_icons: ^1.0.2
+  # 屏幕适配
+  flutter_screenutil: ^5.9.0
+  # 弹框
+  fluttertoast: ^8.2.2
+  # 网络请求
+  dio: ^5.3.2
+  # cookie缓存
+  cookie_jar: ^4.0.8
   dio_cookie_manager: ^3.1.0+1
-  crypto: ^3.0.3 #加密
+  # 加密
+  crypto: ^3.0.3
   shared_preferences: ^2.2.1
   cached_network_image: ^3.2.3
+  # 路由
   fluro: ^2.0.5
+  # Html 与依赖 easy_refresh 冲突【稳定版】
+  flutter_html: ^3.0.0-beta.2
   # 工具库
   intl: ^0.18.1
   common_utils: 2.1.0
