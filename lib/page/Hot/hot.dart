@@ -53,7 +53,7 @@ class _hotState extends State<hot> {
   @override
   Widget build(BuildContext context) {
     final itemList = _buildBody();
-    return Scaffold(backgroundColor: Color(0xFFF6F8FA), body: itemList);
+    return Scaffold(body: itemList);
   }
 
   // bodyList
@@ -89,7 +89,7 @@ class _hotState extends State<hot> {
         Get.to(essay(), arguments: {'id': item['id'], 'page': 2});
       },
       child: Card(
-        elevation: 4.0,
+        elevation: 0.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -100,15 +100,16 @@ class _hotState extends State<hot> {
               children: [
                 Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 75.0,
+                  // elevation: 95.0,
+                  // shadowColor: Colors.red,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   child: FadeInImage.assetNetwork(
                     placeholder: 'assets/image/loading.gif',
                     image: item['image'],
                     fit: BoxFit.cover,
-                    height: 200,
-                    width: 360,
+                    height: 175,
+                    width: MediaQuery.of(context).size.width,
                   ),
                 ),
                 Padding(
@@ -117,7 +118,7 @@ class _hotState extends State<hot> {
                   child: Text(
                     item['title'],
                     style: TextStyle(
-                      color: Colors.cyan,
+                      color: Colors.black87,
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -151,20 +152,21 @@ class _hotState extends State<hot> {
 
             // 标签说明（二选一）
             Positioned(
-              top: 188,
-              right: 20.0,
-              child: Container(
-                color: Colors.pink.withOpacity(0.7),
-                padding: const EdgeInsets.all(4.0),
-                child: const Text(
-                  "知乎日报▪精选",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
+                top: 163,
+                right: 20.0,
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue.withOpacity(0.7),
                   ),
-                ),
-              ),
-            ),
+                  child: const Text(
+                    "知乎日报▪精选",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                )),
             /*
             Positioned(
               top: -5,

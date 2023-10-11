@@ -28,4 +28,5 @@
     <tree path="/lib/page/Hot/hot.dart" title="精选"/>
     <tree path="/lib" title="源码"/>
     <tree path="/assets/image/loading.gif" title="加载动画"/>
+    <tree path="/lib/themes" title="主题"/>
 </trees>

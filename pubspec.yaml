@@ -26,10 +26,12 @@ dependencies:
   cached_network_image: ^3.2.3
   # 状态，路由，依赖管理
   get: ^4.6.6
-  # Html与依赖 easy_refresh 冲突【稳定版】
+  # Html【稳定版】与依赖 easy_refresh 冲突（两个svg插件版本不同）
   flutter_html: ^3.0.0-beta.2
+  flutter_html_svg: ^3.0.0-beta.2
+  #  flutter_html_math: ^3.0.0-beta.2
   #  flutter_html_video: ^3.0.0-beta.2
-  #  flutter_html_table: ^3.0.0-beta.2
+  flutter_html_table: ^3.0.0-beta.2
   #   工具库
   intl: ^0.18.1
   common_utils: 2.1.0

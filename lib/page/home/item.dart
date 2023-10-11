@@ -78,7 +78,7 @@ class _itemState extends State<item> {
   @override
   Widget build(BuildContext context) {
     final itemList = _buildBody();
-    return Scaffold(backgroundColor: Color(0xFFF6F8FA), body: itemList);
+    return Scaffold(body: itemList);
   }
 
   // bodyList
@@ -129,7 +129,6 @@ class _itemState extends State<item> {
         // todo 也可以用点击事件 InkWell
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          print(item['id']);
           Get.to(essay(), arguments: {'id': item['id'], 'page': 1});
         },
         child: Row(
@@ -138,7 +137,7 @@ class _itemState extends State<item> {
             if (item['images'] != null && item['images'].isNotEmpty)
               Card(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                elevation: 5.0,
+                elevation: 0.0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 child: FadeInImage.assetNetwork(
@@ -155,7 +154,7 @@ class _itemState extends State<item> {
                   height: 108,
                   child: Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 5.0,
+                    elevation: 0.0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5.0))),
                     child: Padding(
