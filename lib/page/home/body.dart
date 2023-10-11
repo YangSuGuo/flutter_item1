@@ -5,9 +5,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
-import 'package:item_1/page/home/item.dart';
-import 'package:item_1/page/login/login.dart';
-import 'package:photo_view/photo_view.dart';
 
 import '../../http/net.dart';
 import 'widget/PhotoViewSimpleScreen.dart';
@@ -53,11 +50,9 @@ class _essayState extends State<essay> {
           await DioUtils.instance.dio.get(HttpApi.zhihu_body + '$id');
       if (response.statusCode == 200) {
         final data = json.decode(response.data);
-        /*final List<Map<String, dynamic>> items =
-            data.cast<Map<String, dynamic>>();*/
         return data;
       } else {
-        throw Exception('获取数据失败');
+        throw Exception('获取正文数据失败');
       }
     } catch (e) {
       throw Exception('错误：$e');
@@ -66,13 +61,12 @@ class _essayState extends State<essay> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildBody());
+    return Scaffold(body: items.isEmpty ? GFLoader() : _buildBody());
   }
 
   Widget _buildBody() {
     return Stack(children: [
       // 图片
-      if (items['image'] != null)
         SizedBox(
             height: 370,
             child: FadeInImage.assetNetwork(
@@ -141,13 +135,11 @@ class _essayState extends State<essay> {
                       ),
                     ),
                   // 文章正文
-                  if (items['title'] != null && items['body'] != null)
-                    Html(
-                      data: items['body'] ??
-                          """
-                    <div style='height: 100vh'></div>
-                    """,
-                      style: {
+                  // todo 段落首行缩进
+                  // todo 图片处理，主要是优先级高的内联样式[宽度：500]超宽，有部分不可见，不报错！
+                  Html(
+                    data: items['body'],
+                    style: {
                         // 图片描述文本置灰
                         "figcaption": Style(
                             margin: Margins(
@@ -156,9 +148,7 @@ class _essayState extends State<essay> {
                             color: Colors.grey),
                         // 隐藏前广告
                         "div.meta": Style(display: Display.none),
-                        // 段落首行缩进
                         "p": Style(),
-                        // 图片处理
                         'img': Style()
                       },
                       extensions: [
@@ -169,19 +159,8 @@ class _essayState extends State<essay> {
                             // todo 图像点击逻辑
                             print('图片链接：' + src.toString());
                             Get.to(PhotoViewSimpleScreen(),
-                                arguments: {'src': src}
-
-/*                                Builder(
-                                builder:(_)=> Container(
-                                child: PhotoView(
-                                  imageProvider: NetworkImage(src!),
-                                  minScale: 0.5,
-                                  maxScale: 1.5,
-                                )
-                            ))*/
-
-                                );
-                          },
+                              arguments: {'src': src});
+                        },
                         ),
                         // 排除标签，并替换
                         TagExtension.inline(
@@ -190,8 +169,6 @@ class _essayState extends State<essay> {
                             child: TextSpan(text: "")),
                       ],
                     )
-                  else
-                    Container(alignment: Alignment.center, child: Text('')),
                 ],
               ),
             )),

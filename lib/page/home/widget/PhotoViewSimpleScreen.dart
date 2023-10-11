@@ -19,6 +19,7 @@ class PhotoViewSimpleScreen extends StatelessWidget {
                 maxScale: 1.5,
               ),
             ),
+            // 功能区
             Positioned(
               right: 20,
               bottom: MediaQuery.of(context).padding.bottom + 50,
