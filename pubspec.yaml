@@ -24,16 +24,22 @@ dependencies:
   crypto: ^3.0.3
   shared_preferences: ^2.2.1
   cached_network_image: ^3.2.3
-  # 路由
-  fluro: ^2.0.5
-  # Html 与依赖 easy_refresh 冲突【稳定版】
+  # 状态，路由，依赖管理
+  get: ^4.6.6
+  # Html与依赖 easy_refresh 冲突【稳定版】
   flutter_html: ^3.0.0-beta.2
-  # 工具库
+  #  flutter_html_video: ^3.0.0-beta.2
+  #  flutter_html_table: ^3.0.0-beta.2
+  #   工具库
   intl: ^0.18.1
   common_utils: 2.1.0
   sp_util: 2.0.3
-  getwidget: ^2.0.4 # ui库
-  easy_refresh: ^3.3.2+1 # 下拉刷新
+  # ui库
+  getwidget: ^2.0.4
+  # 下拉刷新
+  easy_refresh: ^3.3.2+1
+  # 图片预览
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:

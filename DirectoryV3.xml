@@ -25,4 +25,6 @@
     <tree path="/lib/common/utils/image_button.dart" title="图片按钮"/>
     <tree path="/lib/page/home/item.dart" title="列表"/>
     <tree path="/lib/page/home/body.dart" title="详情"/>
+    <tree path="/lib/page/Hot/hot.dart" title="精选"/>
+    <tree path="/lib" title="源码"/>
 </trees>

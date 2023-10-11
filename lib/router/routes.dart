@@ -1,1 +1,7 @@
-// todo 命令路由 加路由传参
+
+
+abstract class AppRoutes {
+  static const body = "/body"; //主页Main
+
+  static final routers = [];
+}

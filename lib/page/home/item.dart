@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../http/net.dart';
+import 'body.dart';
 
 class item extends StatefulWidget {
   @override
@@ -31,7 +33,7 @@ class _itemState extends State<item> {
         items.addAll(newItems);
       });
     } catch (e) {
-      print('加载初始数据失败: $e');
+      print('加载列表初始数据失败: $e');
     }
   }
 
@@ -124,33 +126,29 @@ class _itemState extends State<item> {
   // 列表
   Widget _getItem(Map<String, dynamic> item) {
     return GestureDetector(
-        // todo 点击事件 InkWell
+        // todo 也可以用点击事件 InkWell
         behavior: HitTestBehavior.translucent,
-/*        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NextPage(itemId: item['id']),
-            ),
-          );
-        },*/
+        onTap: () {
+          print(item['id']);
+          Get.to(essay(), arguments: {'id': item['id'], 'page': 1});
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (item['images'] != null && item['images'].isNotEmpty)
               Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
-              child: FadeInImage.assetNetwork(
-                placeholder: 'assets/image/loading.gif',
-                image: item['images'][0],
-                fit: BoxFit.cover,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/image/loading.gif',
+                  image: item['images'][0],
+                  fit: BoxFit.cover,
                   width: 100,
                   height: 100,
+                ),
               ),
-            ),
             Expanded(
               child: Container(
                   width: 266,
@@ -166,32 +164,41 @@ class _itemState extends State<item> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // 主要文本
                         children: [
-                          SizedBox(height: 5),
-                          Text(item['title'],
-                              softWrap: true,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: getStyle(Colors.black, 15.0, bold: true)),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5, bottom: 5, left: 5),
+                              child: Text(item['title'],
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: getStyle(Colors.black, 15.0,
+                                      bold: true))),
                           Expanded(
-                            child: Text(item['hint'],
-                                softWrap: true,
-                                maxLines: 3,
-                                style: getStyle(Colors.grey, 13.0)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Text(item['hint'],
+                                  softWrap: true,
+                                  maxLines: 3,
+                                  style: getStyle(Colors.grey, 13.0)),
+                            ),
                           ),
                           // 数据标签
-                          Flex(
-                              direction: Axis.horizontal,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(item['id'].toString(),
-                                    softWrap: false,
-                                    style: getStyle(Colors.grey, 12.4)),
-                                SizedBox(width: 2.4),
-                                Icon(
-                                  Icons.sentiment_satisfied_outlined,
-                                  size: 12.4,
-                                )
-                              ])
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5, right: 3),
+                            child: Flex(
+                                direction: Axis.horizontal,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(item['id'].toString(),
+                                      softWrap: false,
+                                      style: getStyle(Colors.grey, 12.4)),
+                                  SizedBox(width: 2.4),
+                                  Icon(
+                                    Icons.sentiment_satisfied_outlined,
+                                    size: 12.4,
+                                  )
+                                ]),
+                          )
                         ],
                       ),
                     ),

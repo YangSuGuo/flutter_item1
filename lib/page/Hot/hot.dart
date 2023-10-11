@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../http/net.dart';
+import '../home/body.dart';
 
 class hot extends StatefulWidget {
   @override
@@ -11,9 +13,7 @@ class hot extends StatefulWidget {
 }
 
 class _hotState extends State<hot> {
-  DateTime dateTime = DateTime.now(); // 时间
   List<Map<String, dynamic>> items = []; // 知乎日报
-  int day = 0; //分页
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _hotState extends State<hot> {
         items.addAll(newItems);
       });
     } catch (e) {
-      print('加载初始数据失败: $e');
+      print('加载热门初始数据失败: $e');
     }
   }
 
@@ -59,7 +59,6 @@ class _hotState extends State<hot> {
   // bodyList
   Widget _buildBody() {
     return EasyRefresh(
-      // todo 自定义刷新头、尾
       onRefresh: () async {
         // 下拉刷新
         final newItems = await _getList();
@@ -85,14 +84,10 @@ class _hotState extends State<hot> {
     return GestureDetector(
       // todo 点击事件 InkWell
       behavior: HitTestBehavior.translucent,
-/*        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NextPage(itemId: item['id']),
-            ),
-          );
-        },*/
+      onTap: () {
+        print(item['id']);
+        Get.to(essay(), arguments: {'id': item['id'], 'page': 2});
+      },
       child: Card(
         elevation: 4.0,
         shape: RoundedRectangleBorder(

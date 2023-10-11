@@ -1,19 +1,16 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:item_1/page/app.dart';
 
 void main() {
   runApp(const MyApp());
   // 状态栏沉浸
   // todo bug 在夜间模式时，状态栏颜色强制更改
-  if (Platform.isAndroid) {
     SystemUiOverlayStyle style = const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    );
+    statusBarColor: Colors.white,
+  );
     SystemChrome.setSystemUIOverlayStyle(style);
-  }
 
   /// 路由
   // final router = FluroRouter();
@@ -25,8 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      defaultTransition: Transition.size,
+      transitionDuration: const Duration(milliseconds: 500),
       home: app(),
     );
   }
