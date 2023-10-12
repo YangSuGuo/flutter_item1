@@ -86,7 +86,7 @@ class _hotState extends State<hot> {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         print(item['id']);
-        Get.to(essay(), arguments: {'id': item['id'], 'page': 2});
+        Get.to(essay(), arguments: {'id': item['id']});
       },
       child: Card(
         elevation: 0.0,

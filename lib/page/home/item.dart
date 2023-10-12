@@ -129,7 +129,7 @@ class _itemState extends State<item> {
         // todo 也可以用点击事件 InkWell
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          Get.to(essay(), arguments: {'id': item['id'], 'page': 1});
+          Get.to(essay(), arguments: {'id': item['id']});
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

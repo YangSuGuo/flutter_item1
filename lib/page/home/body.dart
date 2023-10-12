@@ -7,6 +7,7 @@ import 'package:flutter_html_table/flutter_html_table.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../http/net.dart';
 import 'widget/PhotoViewSimpleScreen.dart';
@@ -21,43 +22,42 @@ class essay extends StatefulWidget {
 class _essayState extends State<essay> {
   Map<String, dynamic> items = {}; // 文章正文
   int id = 9766161; // 初始值 id
-  int page = 1;
-
   @override
   void initState() {
     super.initState();
     // 初始化数据
-    // todo 需要加载动画！！
+    // todo 需要加载动画！！ok
     print("获取传值:${Get.arguments["id"]}");
     id = Get.arguments["id"];
-    InitialData();
-  }
-
-  Future<void> InitialData() async {
-    try {
-      final body = await _getBody(id);
-      setState(() {
-        items = body;
-      });
-    } catch (e) {
-      // todo 弹框提示 无网络！！
-      print('加载文章正文初始数据失败: $e');
-    }
+    _getBody(id);
   }
 
   // 获取文章正文
-  Future<Map<String, dynamic>> _getBody(int id) async {
+  Future<void> _getBody(int id) async {
     try {
       final response =
           await DioUtils.instance.dio.get(HttpApi.zhihu_body + '$id');
       if (response.statusCode == 200) {
         final data = json.decode(response.data);
-        return data;
+        setState(() {
+          items = data;
+        });
+        print('获取正文数据成功');
       } else {
         throw Exception('获取正文数据失败');
       }
     } catch (e) {
       throw Exception('错误：$e');
+    }
+  }
+
+  // 跳转文章原文
+  Future<void> LaunchInBrowser() async {
+    if (!await launchUrl(
+      Uri.parse(items['url']),
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('无法打开浏览器 $items["url"]');
     }
   }
 
@@ -77,26 +77,10 @@ class _essayState extends State<essay> {
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
           )),
-      // 按钮
-/*      Padding(
-        padding: const EdgeInsets.only(top: 40.0,left: 8),
-        child: Row(children: [
-            ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40)),
-              ),
-            ),
-            child: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
-          ),
-        ]),
-      ),*/
       // 内容显示区
       ListView(children: [
-        const SizedBox(height: 270),
+        const SizedBox(height: 10),
+        const SizedBox(height: 260),
         Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -131,19 +115,18 @@ class _essayState extends State<essay> {
                                 items['publish_time'] * 1000))
                             .toString(),
                         /*items['publish_time'].toString(),*/
-                        style: TextStyle(
-                          color: Colors.grey, fontSize: 18.0),
+                        style: TextStyle(color: Colors.grey, fontSize: 18.0),
                       ),
                     ),
                   // 文章正文
                   // todo 段落首行缩进 主要文字基本为<p>,需要格式化但是排版就成问题了
+                  // todo 优化文章排版 目前行高太矮
                   // todo 暂且不知道知乎日报的表格处理
                   // todo blockquote 标签样式参考https://daily.zhihu.com/story/9766035
-                  // todo 显示原网页
-                  // todo 链接跳转事件
-                  // bug 优先级高的内联样式可能会导致溢出，会有部分不可见[宽度：500] 图片！！
+                  // 链接点击事件，3.0删除了链接跳转事件
+                  // bug 优先级高的内联样式可能会导致溢出，会有部分不可见[宽度：500] 图片！！【用自定义渲染解决】
                   // bug 图片点击区域点击可能会失效 原因不明！
-                  // bug 知乎日报数学符号是用<img>加载svg，不支持！！ 【也许可以用自定义渲染解决】
+                  // bug 知乎日报数学符号是用<img>加载svg，不支持！！ 【自定义渲染失败时添加<svg>】
                   Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Html(
@@ -179,6 +162,8 @@ class _essayState extends State<essay> {
                             border: const Border(
                                 bottom: BorderSide(color: Colors.grey)),
                           ),
+                          // 去除下划线
+                          "a": Style(textDecoration: TextDecoration.none)
                         },
                         extensions: [
                           const TableHtmlExtension(),
@@ -192,6 +177,20 @@ class _essayState extends State<essay> {
                                   child: child,
                                 );
                               }),
+                          // 自定义图像渲染
+                          /* ImageExtension( // 官方示例
+                              matchesAssetImages: false,
+                              matchesDataImages: false,
+                              networkSchemas: {"custom:"},
+                              builder: (extensionContext) {
+                                final element = extensionContext.styledElement as ImageElement;
+                                return CustomImage.network(
+                                  element.src.replace("custom:", ""),
+                                  width: element.width,
+                                  height: element.height,
+                                );
+                              }
+                          ),*/
                           // 点击图片
                           OnImageTapExtension(
                               onImageTap: (src, imgAttributes, element) {
@@ -202,7 +201,7 @@ class _essayState extends State<essay> {
                           // 排除标签，并替换
                           TagExtension.inline(
                               tagsToExtend: {'script'},
-                              child: TextSpan(text: "")),
+                              child: TextSpan(text: '')),
                         ],
                         // css错误
                         onCssParseError: (css, messages) {
@@ -217,7 +216,45 @@ class _essayState extends State<essay> {
                 ],
               ),
             )),
-      ])
+      ]),
+      // 功能区
+      // todo 阅读原文 跳转浏览器打开 item['url'] 链接
+      // todo 按钮组件替换为 MaterialButton
+      // bug 无法点击 Stack组件问题
+      Padding(
+        padding: const EdgeInsets.only(top: 50.0, left: 10),
+        child: Row(children: [
+          // 返回
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+              elevation: 1,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    bottomLeft: Radius.circular(15)),
+              ),
+            ),
+            child: const Icon(Icons.arrow_back),
+            onPressed: () => Get.back(),
+          ),
+          // 阅读原文
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.white,
+                elevation: 1,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      bottomRight: Radius.circular(15)),
+                ),
+              ),
+              child: const Icon(Icons.visibility_outlined),
+              onPressed: () => LaunchInBrowser()),
+        ]),
+      ),
     ]);
   }
 }
